@@ -1,4 +1,5 @@
 # Data Science Midterm Project
+by Jeevan and James
 
 ## Project/Goals
 
