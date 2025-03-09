@@ -98,12 +98,15 @@ def display_results_sample (y_test, y_test_prediction, num_results=10):
     print(f"\t\t\t\t\t\t\t\t\tAverage % error = {average_percentage_error}%")
 
 #Function to find best linear regression model
-def find_best_regression_model (iX_train, iX_test, iy_train, iy_test):
+def find_best_regression_model (X_train, X_test, y_train, y_test):
+    """
+    Use this function to try many different linear regression models to find the r2 scores and rank them
+    """
     #import needed modules
     import numpy as np
     import pandas as pd
     from sklearn.model_selection import train_test_split, GridSearchCV
-    from sklearn.metrics import mean_squared_error, r2_score
+    from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
     from sklearn.linear_model import LinearRegression
     from sklearn.tree import DecisionTreeRegressor
     from sklearn.ensemble import RandomForestRegressor
@@ -111,6 +114,12 @@ def find_best_regression_model (iX_train, iX_test, iy_train, iy_test):
     from lightgbm import LGBMRegressor
     from sklearn.neural_network import MLPRegressor
     from sklearn.linear_model import ElasticNet
+
+    #Suppress convergance warnings
+    import warnings
+    from sklearn.exceptions import ConvergenceWarning
+
+    warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 
     #List models to discover
@@ -120,26 +129,47 @@ def find_best_regression_model (iX_train, iX_test, iy_train, iy_test):
         "Decision Tree": DecisionTreeRegressor(),
         "Random Forest": RandomForestRegressor(),
         "XGBoost": XGBRegressor(),
-        "LightGBM": LGBMRegressor(),
-        "Neural Network": MLPRegressor(hidden_layer_sizes=(64, 32), max_iter=500)
+        "LightGBM": LGBMRegressor(verbose=0),
+        "Neural Network": MLPRegressor(
+            hidden_layer_sizes=(64, 32), 
+            n_iter_no_change=10, 
+            max_iter=2000,
+            learning_rate_init=0.001
+            )
     }
 
     #Empty results dictionary
     results = {}
 
+    #Convert both y_train and y_test to 1D arrays
+    y_train = y_train.to_numpy().ravel()
+    y_test = y_test.to_numpy().ravel()
+    
     # Train and evaluate models
     for name, model in models.items():
-        print(f"Processing {name}")
-        model.fit(iX_train, iy_train)
-        iy_pred = model.predict(iX_test)
-        mse = mean_squared_error(iy_test, iy_pred)
-        r2 = r2_score(iy_test, iy_pred)
+        print(f"Processing {name}...")
+
+        model.fit(X_train, y_train)
+
+        #Make predictions    
+        iy_pred = model.predict(X_test)
+
+        #Calculate error scores
+        r2 = round(r2_score(y_test, iy_pred),4)
+        mse = round(mean_squared_error(y_test, iy_pred),2)
+        mae = round(mean_absolute_error(y_test, iy_pred),2)
         
-        results[name] = {"MSE": mse, "R² Score": r2}
+        #Add results to dictionary
+        results[name] = {
+            "R² Score": r2,
+            "MSE": mse, 
+            "MAE": mae
+        }
 
     # Convert results to DataFrame for better visualization
     results_df = pd.DataFrame(results).T
     results_df_sorted = results_df.sort_values(by='R² Score', ascending=False)
+    results_df_sorted['Rank'] = results_df_sorted['R² Score'].rank(method='dense', ascending=False).astype(int)
 
     print(f"Processing COMPLETE!")
 
