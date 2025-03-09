@@ -96,3 +96,51 @@ def display_results_sample (y_test, y_test_prediction, num_results=10):
 
     average_percentage_error = round(sum_percentage_error / num_results,2)
     print(f"\t\t\t\t\t\t\t\t\tAverage % error = {average_percentage_error}%")
+
+#Function to find best linear regression model
+def find_best_regression_model (iX_train, iX_test, iy_train, iy_test):
+    #import needed modules
+    import numpy as np
+    import pandas as pd
+    from sklearn.model_selection import train_test_split, GridSearchCV
+    from sklearn.metrics import mean_squared_error, r2_score
+    from sklearn.linear_model import LinearRegression
+    from sklearn.tree import DecisionTreeRegressor
+    from sklearn.ensemble import RandomForestRegressor
+    from xgboost import XGBRegressor
+    from lightgbm import LGBMRegressor
+    from sklearn.neural_network import MLPRegressor
+    from sklearn.linear_model import ElasticNet
+
+
+    #List models to discover
+    models = {
+        "Linear Regression": LinearRegression(),
+        "Elastic Net": ElasticNet(),
+        "Decision Tree": DecisionTreeRegressor(),
+        "Random Forest": RandomForestRegressor(),
+        "XGBoost": XGBRegressor(),
+        "LightGBM": LGBMRegressor(),
+        "Neural Network": MLPRegressor(hidden_layer_sizes=(64, 32), max_iter=500)
+    }
+
+    #Empty results dictionary
+    results = {}
+
+    # Train and evaluate models
+    for name, model in models.items():
+        print(f"Processing {name}")
+        model.fit(iX_train, iy_train)
+        iy_pred = model.predict(iX_test)
+        mse = mean_squared_error(iy_test, iy_pred)
+        r2 = r2_score(iy_test, iy_pred)
+        
+        results[name] = {"MSE": mse, "R² Score": r2}
+
+    # Convert results to DataFrame for better visualization
+    results_df = pd.DataFrame(results).T
+    results_df_sorted = results_df.sort_values(by='R² Score', ascending=False)
+
+    print(f"Processing COMPLETE!")
+
+    return results_df_sorted
