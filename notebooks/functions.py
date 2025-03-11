@@ -70,6 +70,8 @@ def display_results_sample (y_test, y_test_prediction, num_results=10):
         y_test_pred: Dataframe or array of predicted variabel on test data
         num_results: (Optional) The number of results desired in return. Default = 10
 
+    Returns: 
+        None
     """
     import random
     import numpy as np
@@ -100,7 +102,17 @@ def display_results_sample (y_test, y_test_prediction, num_results=10):
 #Function to find best linear regression model
 def find_best_regression_model (X_train, X_test, y_train, y_test):
     """
-    Use this function to try many different linear regression models to find the r2 scores and rank them
+    Use this function to try many different linear regression models to find the r2 scores and rank them. This function attempts to use 7 linear regression models:
+    Linear Regression, Elastic Net, Decision Tree, Random Forest, XG Boost, LightGBM & Neural Networks
+
+    Args:
+        X_train: Independant variable training dataframe
+        X_test: Independant test dataframe
+        y_train: Target variable training dataframe
+        y_test: Target variable test dataframe
+
+    Returns: 
+        None
     """
     #import needed modules
     import numpy as np
