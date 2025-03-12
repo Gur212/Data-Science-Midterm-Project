@@ -1,0 +1,11 @@
+,Feature
+0,location.address.city
+1,description.baths
+2,fireplace
+3,description.sqft
+4,condos
+5,townhomes
+6,location.address.state
+7,description.baths_full
+8,single_family
+9,description.garage
