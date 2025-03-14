@@ -24,10 +24,10 @@ To train and tune a machine learning model that is able to predict the sale pric
     - refit model with tuned hyperparameters
 
 ## Results
-The model we ended up selecting was XGBoost. With our minimum viable model, we were able to achieve an R <sup>2</sup> score of 0.92 on our test data. We got a mean average error (MAE) of $32,921.31 and a root mean squared error (RMSE) of $51,815.83
+The model we ended up selecting was XGBoost. With our minimum viable model, we were able to achieve an R <sup>2</sup> score of 0.994 on our test data. We got a mean average error (MAE) of $8567.57 and a root mean squared error (RMSE) of $14489.44. After performing a custom cross validation to minimise data leakage, we got very similar results with an R <sup>2</sup> score of 0.994, an MAE of $8104.39 and an RMSE of $14282.57.
 
 ## Challenges 
 Even though the data appeared to be relatively clean, there was a lot of processing that had to be performed on it to make it usable.
 
 ## Future Goals
-If we had more time, we'd like to explore how well we could tune each model to perform.
+If we had more time, we'd like to explore how well we could tune each model to perform. It's also possible that there was leakage from the data wrangling, so we'd like to explore splitting the data earlier on. 

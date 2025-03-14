@@ -301,10 +301,12 @@ def custom_cross_validation(training_data, splits =5):
     from sklearn.model_selection import KFold
     
     kfold = KFold(n_splits=splits, shuffle=True)
-    train_folds = []
-    val_folds = []
     
     for training_index, val_index in kfold.split(training_data):
+        
+        train_folds = []
+        val_folds = []
+    
         #Creating dataframes for training and validation folds
         train_fold = training_data.iloc[training_index]
         val_fold = training_data.iloc[val_index]
@@ -344,12 +346,6 @@ def custom_cross_validation(training_data, splits =5):
                 val_fold.at[index, 'location.address.state'] = state_dict[state]
             except:
                 val_fold.at[index, 'location.address.state'] = default_mean
-        '''
-        train_fold['location.address.city'] = train_fold['location.address.city'].astype(float)
-        train_fold['location.address.state'] = train_fold['location.address.state'].astype(float)
-        val_fold['location.address.city'] = val_fold['location.address.city'].astype(float)
-        val_fold['location.address.state'] = val_fold['location.address.state'].astype(float)
-        '''
         
         train_fold = train_fold.astype(float)
         train_fold = train_fold.astype(float)
@@ -391,6 +387,7 @@ def hyperparameter_search(output, param_grid):
             y_test = validation_folds[fold]['description.sold_price']
             
             #Fitting model
+            xg.set_params(**combo)
             xg.fit(X_train, y_train)
             y_pred = xg.predict(X_test)
 
