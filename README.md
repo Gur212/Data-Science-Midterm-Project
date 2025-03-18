@@ -17,7 +17,7 @@ To train and tune a machine learning model that is able to predict the sale pric
 - #### Model Selection and Feature Engineering
     - trained and fitted multiple machine learning models to see which performed best using default hyperparameters
     - performed feature selection to reduce dimensionality of chosen model
-    - 
+      
 - #### Hyperparameter Tuning
     - used GridSearchCV to find optimal hyperparameters 
     - created user defined functions to perform cross validation and hyperparameter searching while avoiding data leakage
